@@ -163,7 +163,8 @@ function taskCreateFunctionTemplatePartial (
         lambdaName,
         responseContentType,
         authorizerFunctionName,
-        redirects
+        redirects,
+        lambdaRuntime: runtime
       })
     };
     methodDefinition = { resourceName, httpMethod };

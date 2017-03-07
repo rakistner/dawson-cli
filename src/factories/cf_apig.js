@@ -168,7 +168,7 @@ export function templateModel ({ modelName, modelSchema }) {
 }
 
 export function templateLambdaIntegration (
-  { lambdaName, responseContentType, redirects }
+  { lambdaName, responseContentType, redirects, lambdaRuntime }
 ) {
   let responseTemplate = {
     [responseContentType]: (
@@ -221,6 +221,12 @@ export function templateLambdaIntegration (
       )
     };
   }
+  const getSelectionPattern = statusCode => {
+    if (lambdaRuntime === 'python2.7') {
+      return `.*\\"httpStatus\\": ${statusCode}.*`;
+    }
+    return `.*"httpStatus":${statusCode}.*`;
+  };
   return {
     IntegrationHttpMethod: 'POST',
     IntegrationResponses: [
@@ -232,25 +238,25 @@ export function templateLambdaIntegration (
       {
         ResponseParameters: responseParameters,
         ResponseTemplates: { ...errorResponseTemplate },
-        SelectionPattern: `.*"httpStatus":500.*`,
+        SelectionPattern: getSelectionPattern(500),
         StatusCode: 500
       },
       {
         ResponseParameters: responseParameters,
         ResponseTemplates: { ...errorResponseTemplate },
-        SelectionPattern: `.*"httpStatus":400.*`,
+        SelectionPattern: getSelectionPattern(400),
         StatusCode: 400
       },
       {
         ResponseParameters: responseParameters,
         ResponseTemplates: { ...errorResponseTemplate },
-        SelectionPattern: `.*"httpStatus":403.*`,
+        SelectionPattern: getSelectionPattern(403),
         StatusCode: 403
       },
       {
         ResponseParameters: responseParameters,
         ResponseTemplates: { ...errorResponseTemplate },
-        SelectionPattern: `.*"httpStatus":404.*`,
+        SelectionPattern: getSelectionPattern(404),
         StatusCode: 404
       }
     ],
@@ -286,7 +292,8 @@ export function templateMethod (
     lambdaName,
     responseContentType,
     authorizerFunctionName,
-    redirects
+    redirects,
+    lambdaRuntime
   }
 ) {
   const responseModelName = 'HelloWorldModel';
@@ -296,7 +303,8 @@ export function templateMethod (
   const integrationConfig = templateLambdaIntegration({
     lambdaName,
     responseContentType,
-    redirects
+    redirects,
+    lambdaRuntime
   });
   let responseModel;
   if (responseContentType.includes('application/json')) {
