@@ -13,6 +13,7 @@ require('babel-register')(BABEL_CONFIG);
 import AWS from 'aws-sdk';
 import execa from 'execa';
 import Type from 'prop-types';
+import path from 'path';
 import { existsSync } from 'fs';
 import { stripIndent } from 'common-tags';
 
