@@ -23,7 +23,7 @@
   "author": "Simone Lusenti <lusenti.s@gmail.com>",
   "license": "GPL-3.0",
   "dependencies": {
-    "aws-sdk": "^2.7.17",
+    "aws-sdk": "^2.32.0",
     "babel-cli": "^6.14.0",
     "babel-polyfill": "^6.16.0",
     "babel-preset-dawson": "0.0.3",
